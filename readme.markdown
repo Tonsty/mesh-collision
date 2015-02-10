@@ -1,6 +1,6 @@
 # mesh-collision
 
-return the contact set between two meshes in motion
+return the contact set (point, depth, normal) between two meshes in motion
 
 # example
 
@@ -19,9 +19,9 @@ Raycast from each point in `a` onto `b`.
 
 `a` and `b` both must have these properties:
 
-* next - a gl-matrix mat4 of the next position and rotation
-* prev - a gl-matrix mat4 of the previous position and rotation
-* positions - 
+* next - a mat4 of the next position and rotation
+* prev - a mat4 of the previous position and rotation
+* positions - an array of `[x,y,z]` coordinate arrays
 * cells - an array of arrays of indexes
 
 The `positions` and `cells` array structures are compatible with
