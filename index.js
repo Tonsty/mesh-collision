@@ -2,12 +2,14 @@ var intersect = require('ray-triangle-intersection');
 var transform = require('gl-vec3/transformMat4');
 var sub = require('gl-vec3/subtract');
 var dist = require('gl-vec3/distance');
+var copy = require('gl-vec3/copy');
 
 var origin = [0,0,0];
 var start = [0,0,0];
 var end = [0,0,0];
 var dir = [0,0,0];
 var hit = [0,0,0];
+var minhit = [0,0,0];
 
 var tri = [null,null,null];
 
@@ -16,6 +18,8 @@ module.exports = function (a, b) {
     transform(end, origin, a.next);
     sub(dir, start, end);
     var dse = null;
+    var hitcount = 0;
+    var mindist = Infinity;
     
     for (var i = 0; i < a.positions.length; i++) {
         var pt = a.positions[i];
@@ -25,10 +29,14 @@ module.exports = function (a, b) {
             if (!intersect(hit, pt, dir, tri)) continue;
             if (dse === null) dse = dist(start, end);
             var hd = dist(start, pt);
-            if (hd < dse) {
-                return hit;
+            if (hd < dse && hd < mindist) {
+                copy(minhit, hit);
+                hitcount ++;
             }
         }
+    }
+    if (hitcount > 0) {
+        return { point: minhit };
     }
     return null;
 };

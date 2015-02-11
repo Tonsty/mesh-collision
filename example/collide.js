@@ -46,12 +46,6 @@ var engine = loop({ fps: 10 }, function (dt) {
         }
     }
 });
-engine.setInterval(function () {
-    for (var i = 0; i < bodies.length; i++) {
-        var pos = transformMat4([], [0,0,0], bodies[i].next);
-        console.log(i, pos);
-    }
-}, 1000);
 engine.run();
 
 function translate (out, xyz) { return mat4.translate(out, out, xyz) }
