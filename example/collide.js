@@ -1,5 +1,7 @@
 var collision = require('../');
 var mat4 = require('gl-mat4');
+var transformMat4 = require('gl-vec3/transformMat4');
+
 var loop = require('frame-loop');
 var lerp = require('mat4-interpolate');
 var teapot = require('teapot');
@@ -11,7 +13,7 @@ var bodies = [
         next: translate(mat4.create(), [-15,0,5]),
         cells: bunny.cells,
         positions: bunny.positions,
-        velocity: translate(mat4.create(), [-5,0,0])
+        velocity: translate(mat4.create(), [5,0,0])
     },
     {
         prev: mat4.create(),
@@ -25,7 +27,7 @@ var tmpm = mat4.create();
 var tmpv = [0,0,0];
 var origin = [0,0,0];
 
-var engine = loop(function (dt) {
+var engine = loop({ fps: 10 }, function (dt) {
     for (var i = 0; i < bodies.length; i++) {
         var b = bodies[i];
         mat4.copy(b.prev, b.next);
@@ -39,11 +41,17 @@ var engine = loop(function (dt) {
             var contact = collision(bodies[i], bodies[j]);
             if (contact) {
                 console.log(contact);
-                engine.stop();
+                engine.pause();
             }
         }
     }
 });
+engine.setInterval(function () {
+    for (var i = 0; i < bodies.length; i++) {
+        var pos = transformMat4([], [0,0,0], bodies[i].next);
+        console.log(i, pos);
+    }
+}, 1000);
 engine.run();
 
 function translate (out, xyz) { return mat4.translate(out, out, xyz) }
