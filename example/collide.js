@@ -24,7 +24,6 @@ var bodies = [
     }
 ];
 var tmpm = mat4.create();
-var origin = [0,0,0];
 
 var engine = loop({ fps: 10 }, function (dt) {
     for (var i = 0; i < bodies.length; i++) {
