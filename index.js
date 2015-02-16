@@ -14,30 +14,22 @@ var minhit = [0,0,0];
 
 var tri = [null,null,null];
 
-var ca = [0,0,0];
-var cb = [0,0,0];
-
-module.exports = function (out, a, b) {
-    var da = collide(ca, a, b);
-    var db = collide(cb, a, b);
-    if (da === Infinity && db === Infinity) return null;
-    
-    if (da < db) {
-        copy(out, ca);
-        return da;
-    }
-    else {
-        copy(out, cb);
-        return db;
-    }
+module.exports = function (a, b) {
+    var ca = collide(a, b);
+    var cb = collide(b, a);
+    if (ca && cb) return ca.mix < cb.mix ? ca : cb;
+    else if (ca) return ca;
+    else if (cb) return cb;
+    return null;
 };
 
-function collide (out, a, b) {
+function collide (a, b) {
     transform(start, origin, a.prev);
     transform(end, origin, a.next);
     sub(dir, start, end);
     var dse = dist(start, end);
     var hitcount = 0;
+    var mintri = null;
     var mindist = Infinity;
     
     for (var i = 0; i < a.positions.length; i++) {
@@ -49,15 +41,20 @@ function collide (out, a, b) {
             if (hd < dse && hd < mindist) {
                 copy(minhit, hit);
                 mindist = hd;
+                mintri = tri;
                 hitcount ++;
             }
         }
     }
     if (hitcount > 0) {
-        copy(out, minhit);
-        return mindist / dse; // between 0 and 1
+        return {
+            mix: mindist / dse, // between 0 and 1
+            direction: copy([], dir),
+            point: copy([], minhit),
+            triangle: mintri
+        };
     }
-    return Infinity;
+    return null;
 }
 
 function loadtri (out, ps, cell) {

@@ -1,4 +1,4 @@
-var collision = require('../');
+var collide = require('../');
 var mat4 = require('gl-mat4');
 var transformMat4 = require('gl-vec3/transformMat4');
 
@@ -24,7 +24,6 @@ var bodies = [
     }
 ];
 var tmpm = mat4.create();
-var contact = [0,0,0];
 var origin = [0,0,0];
 
 var engine = loop({ fps: 10 }, function (dt) {
@@ -38,9 +37,9 @@ var engine = loop({ fps: 10 }, function (dt) {
     
     for (var i = 0; i < bodies.length - 1; i++) {
         for (var j = i + 1; j < bodies.length; j++) {
-            var d = collision(contact, bodies[i], bodies[j]);
-            if (d !== null) {
-                console.log(d, contact);
+            var c = collide(bodies[i], bodies[j]);
+            if (c) {
+                console.log(c);
                 engine.pause();
             }
         }
