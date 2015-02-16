@@ -1,6 +1,6 @@
 # mesh-collision
 
-return the contact set (point, depth, normal) between two meshes in motion
+return the contact set between two 3d meshes in motion
 
 # example
 
