@@ -4,6 +4,7 @@ var sub = require('gl-vec3/subtract');
 var dist = require('gl-vec3/distance');
 var copy = require('gl-vec3/copy');
 var lerp = require('mat4-interpolate');
+var trinorm = require('triangle-normal');
 
 var origin = [0,0,0];
 var start = [0,0,0];
@@ -49,9 +50,13 @@ function collide (a, b) {
     if (hitcount > 0) {
         return {
             mix: mindist / dse, // between 0 and 1
-            direction: copy([], dir),
             point: copy([], minhit),
-            triangle: mintri
+            normal: trinorm(
+                mintri[0][0], mintri[0][1], mintri[0][2],
+                mintri[1][0], mintri[1][1], mintri[1][2],
+                mintri[2][0], mintri[2][1], mintri[2][2],
+                []
+            )
         };
     }
     return null;
